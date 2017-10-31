@@ -30,6 +30,10 @@ class Puzzle
                 set();
                 return;
             }                                               //defualt puzzle construction
+            else if(o == 3)
+            {
+                return;
+            }
             
             int val_set = 1;
             vector<int> temp_vecs(3);
@@ -37,21 +41,32 @@ class Puzzle
             {
                 for(int j = 0; j < psize; j++)
                 {
-                    if((i == psize - 1) && (j == psize - 1))
+                    if((i == psize - 1) && (j == psize - 2))
                     {
                         temp_vecs.at(j) = 0;
-                        break;
                     }
-                    temp_vecs.at(j) = val_set;
-                    val_set++;
+                    else
+                    {
+                        temp_vecs.at(j) = val_set;
+                        val_set++;
+                    }
                 }
                 puzzle_board.push_back(temp_vecs);
             }
+            blank.first = psize - 1;
+            blank.second = psize - 2;
+        }
+        
+        Puzzle & operator=(const Puzzle &p)
+        {
+            puzzle_board = p.puzzle_board;
+            blank = p.blank;
+	    return *this;
         }
         
         void print_blank()
         {
-            cout << "blank: (" << blank.first << ", " << blank.second << ")" << endl;
+            cout << "blank: (" << 1 + blank.first << ", " << 1 + blank.second << ")" << endl;
         }
     
         void set()
@@ -109,6 +124,11 @@ class Puzzle
         
         void print()
         {
+            if(puzzle_board.empty())
+            {
+                cout << "its empty you animal" << endl;
+                return;
+            }
             for(int i = 0; i < psize; i++)
             {
                 for(int j = 0; j < psize; j++)
@@ -119,60 +139,92 @@ class Puzzle
             }
         }
         
-        bool up()
+        bool is_up()
         {
             if(blank.first == 0)
             {
                 return false;
             }
             
+            /*int temp = puzzle_board.at(blank.first - 1).at(blank.second);
+            puzzle_board.at(blank.first - 1).at(blank.second) = puzzle_board.at(blank.first).at(blank.second);
+            puzzle_board.at(blank.first).at(blank.second) = temp;
+            blank.first = blank.first - 1;*/
+            return true;
+        }
+        
+        void up()
+        {
             int temp = puzzle_board.at(blank.first - 1).at(blank.second);
             puzzle_board.at(blank.first - 1).at(blank.second) = puzzle_board.at(blank.first).at(blank.second);
             puzzle_board.at(blank.first).at(blank.second) = temp;
             blank.first = blank.first - 1;
-            return true;
         }
         
-        bool down()
+        bool is_down()
         {
             if(blank.first == psize - 1)
             {
                 return false;
             }
             
+            /*int temp = puzzle_board.at(blank.first + 1).at(blank.second);
+            puzzle_board.at(blank.first + 1).at(blank.second) = puzzle_board.at(blank.first).at(blank.second);
+            puzzle_board.at(blank.first).at(blank.second) = temp;
+            blank.first = blank.first + 1;*/
+            return true;
+        }
+        
+        void down()
+        {
             int temp = puzzle_board.at(blank.first + 1).at(blank.second);
             puzzle_board.at(blank.first + 1).at(blank.second) = puzzle_board.at(blank.first).at(blank.second);
             puzzle_board.at(blank.first).at(blank.second) = temp;
             blank.first = blank.first + 1;
-            return true;
         }
         
-        bool left()
+        bool is_left()
         {
             if(blank.second == 0)
             {
                 return false;
             }
             
+            /*int temp = puzzle_board.at(blank.first).at(blank.second - 1);
+            puzzle_board.at(blank.first).at(blank.second - 1) = puzzle_board.at(blank.first).at(blank.second);
+            puzzle_board.at(blank.first).at(blank.second) = temp;
+            blank.second = blank.second - 1;*/
+            return true;
+        }
+        
+        void left()
+        {
             int temp = puzzle_board.at(blank.first).at(blank.second - 1);
             puzzle_board.at(blank.first).at(blank.second - 1) = puzzle_board.at(blank.first).at(blank.second);
             puzzle_board.at(blank.first).at(blank.second) = temp;
             blank.second = blank.second - 1;
-            return true;
         }
         
-        bool right()
+        bool is_right()
         {
             if(blank.second == psize - 1)
             {
                 return false;
             }
             
+            /*int temp = puzzle_board.at(blank.first).at(blank.second + 1);
+            puzzle_board.at(blank.first).at(blank.second + 1) = puzzle_board.at(blank.first).at(blank.second);
+            puzzle_board.at(blank.first).at(blank.second) = temp;
+            blank.second = blank.second + 1;*/
+            return true;
+        }
+        
+        void right()
+        {
             int temp = puzzle_board.at(blank.first).at(blank.second + 1);
             puzzle_board.at(blank.first).at(blank.second + 1) = puzzle_board.at(blank.first).at(blank.second);
             puzzle_board.at(blank.first).at(blank.second) = temp;
             blank.second = blank.second + 1;
-            return true;
         }
         
         bool goal_check()
@@ -198,6 +250,24 @@ class Puzzle
                 }
             }
             return true;
+        }
+        
+        vector< vector<int> > * get_v()
+        {
+            return &puzzle_board;
+        }
+        
+        bool operator==(const Puzzle *p)
+        {
+            if(puzzle_board == p->puzzle_board)
+            {
+                if(blank == p->blank)
+                {
+                    return true;
+                }
+            }
+            
+            return false;
         }
 };
 #endif
