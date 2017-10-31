@@ -12,12 +12,12 @@ void add_kids(Node* n, queue<Node*> &v)
     
     temp = n->up();
     /*for(int i = 0; i < visited.size(); i++)
-    {
-        if(n->get_p()->get_v() == visited.at(i)->get_p()->get_v())
-        {
-            check = false;
-        }
-    }*/
+     {
+     if(n->get_p()->get_v() == visited.at(i)->get_p()->get_v())
+     {
+     check = false;
+     }
+     }*/
     if(temp == n->get_parent())
     {
         check = false;
@@ -32,12 +32,12 @@ void add_kids(Node* n, queue<Node*> &v)
     check = true;
     temp = n->down();
     /*for(int i = 0; i < visited.size(); i++)
-    {
-        if(n->get_p()->get_v() == visited.at(i)->get_p()->get_v())
-        {
-            check = false;
-        }
-    }*/
+     {
+     if(n->get_p()->get_v() == visited.at(i)->get_p()->get_v())
+     {
+     check = false;
+     }
+     }*/
     
     if(temp == n->get_parent())
     {
@@ -53,12 +53,12 @@ void add_kids(Node* n, queue<Node*> &v)
     check = true;
     temp = n->left();
     /*for(int i = 0; i < visited.size(); i++)
-    {
-        if(n->get_p()->get_v() == visited.at(i)->get_p()->get_v())
-        {
-            check = false;
-        }
-    }*/
+     {
+     if(n->get_p()->get_v() == visited.at(i)->get_p()->get_v())
+     {
+     check = false;
+     }
+     }*/
     
     if(temp == n->get_parent())
     {
@@ -73,12 +73,12 @@ void add_kids(Node* n, queue<Node*> &v)
     check = true;
     temp = n->right();
     /*for(int i = 0; i < visited.size(); i++)
-    {
-        if(n->get_p()->get_v() == visited.at(i)->get_p()->get_v())
-        {
-            check = false;
-        }
-    }*/
+     {
+     if(n->get_p()->get_v() == visited.at(i)->get_p()->get_v())
+     {
+     check = false;
+     }
+     }*/
     
     if(temp == n->get_parent())
     {
@@ -90,7 +90,6 @@ void add_kids(Node* n, queue<Node*> &v)
         n->child(temp);
     }
 }
-
 
 Node* uniform_cost(Node* root)
 {
@@ -121,13 +120,14 @@ Node* uniform_cost(Node* root)
         cout << endl;
         
         curr->get_p()->print();
+        //cout << curr->get_g() << endl;
         
         cout << endl;
         
         add_kids(curr, kyu);
         
         /*cout << "the front child's cost is "<< curr->get_g() << endl;
-        cout << "the front child looks like: " << endl; */
+         cout << "the front child looks like: " << endl; */
         
         //curr->get_p()->print();
         
@@ -144,7 +144,126 @@ Node* uniform_cost(Node* root)
         //break;
         goal = curr->get_p()->goal_check();
         /*int thing;
-        cin >> thing;*/
+         cin >> thing;*/
+        if(goal)
+        {
+            goal_node = curr;
+        }
+    }
+    
+    return goal_node;
+}
+
+void add_kids_a(Node* n, vector<Node*> &v)
+{
+    Node* temp;
+    bool check = true;
+    
+    temp = n->up();
+    
+    if(temp == n->get_parent())
+    {
+        check = false;
+    }
+    
+    if((temp != 0) && check)
+    {
+        v.push_back(temp);
+        n->child(temp);
+    }
+    
+    check = true;
+    temp = n->down();
+    
+    if(temp == n->get_parent())
+    {
+        check = false;
+    }
+    
+    if((temp != 0) && check)
+    {
+        v.push_back(temp);
+        n->child(temp);
+    }
+    
+    check = true;
+    temp = n->left();
+    
+    if(temp == n->get_parent())
+    {
+        check = false;
+    }
+    if((temp != 0) && check)
+    {
+        v.push_back(temp);
+        n->child(temp);
+    }
+    
+    check = true;
+    temp = n->right();
+    
+    if(temp == n->get_parent())
+    {
+        check = false;
+    }
+    if((temp != 0) && check)
+    {
+        v.push_back(temp);
+        n->child(temp);
+    }
+}
+
+Node* retrieve_smallest_tile(vector<Node*> &v)
+{
+    Node* smallest = v.at(0);
+    int pop_ind = 0;
+    for(int i = 0; i < v.size(); i++)
+    {
+        if(v.at(i)->misplaced_tiles() < smallest->misplaced_tiles())
+        {
+            smallest = v.at(i);
+            pop_ind = i;
+        }
+    }
+    v.erase(v.begin() + pop_ind);
+    
+    return smallest;
+}
+
+Node* a_misplaced_tile(Node* root)
+{
+    if(root->get_p()->goal_check())
+    {
+        return root;
+    }
+    
+    vector<Node*> kyu;
+    add_kids_a(root, kyu);
+    cout << "root has " << kyu.size() << " children" << endl;
+    
+    bool goal = false;
+    Node* goal_node = 0;
+    
+    
+    while(kyu.size() > 0 && !goal)
+    {
+        Node* curr = retrieve_smallest_tile(kyu);
+        
+        if(curr->get_p()->goal_check())
+        {
+            goal_node = curr;
+        }
+        
+        cout << endl;
+        
+        curr->get_p()->print();
+        
+        cout << endl;
+        
+        add_kids_a(curr, kyu);
+        
+        goal = curr->get_p()->goal_check();
+        
         if(goal)
         {
             goal_node = curr;
@@ -167,6 +286,66 @@ void traceback(Node* n, vector<Node*> &v)
     traceback(n->get_parent(), v);
 }
 
+Node* retrieve_smallest_dist(vector<Node*> &v)
+{
+    Node* smallest = v.at(0);
+    int pop_ind = 0;
+    for(int i = 0; i < v.size(); i++)
+    {
+        if(v.at(i)->manhattan_distance() < smallest->manhattan_distance())
+        {
+            smallest = v.at(i);
+            pop_ind = i;
+        }
+    }
+    v.erase(v.begin() + pop_ind);
+    
+    return smallest;
+}
+
+Node* a_manhattan_dist(Node* root)
+{
+    if(root->get_p()->goal_check())
+    {
+        return root;
+    }
+    
+    vector<Node*> kyu;
+    add_kids_a(root, kyu);
+    cout << "root has " << kyu.size() << " children" << endl;
+    
+    bool goal = false;
+    Node* goal_node = 0;
+    
+    
+    while(kyu.size() > 0 && !goal)
+    {
+        Node* curr = retrieve_smallest_dist(kyu);
+        
+        if(curr->get_p()->goal_check())
+        {
+            goal_node = curr;
+        }
+        
+        cout << endl;
+        
+        curr->get_p()->print();
+        
+        cout << endl;
+        
+        add_kids_a(curr, kyu);
+        
+        goal = curr->get_p()->goal_check();
+        
+        if(goal)
+        {
+            goal_node = curr;
+        }
+    }
+    
+    return goal_node;
+}
+
 
 int main()
 {
@@ -175,32 +354,80 @@ int main()
     Node* n = new Node(&p);
     n->get_p()->print();
     cout << endl;
-    cout << "root's cost should be 0: ";
-    n->get_g();
-    cout << endl;
+    /*cout << "root's cost should be 0: ";
+     n->get_g();
+     cout << endl;*/
+    cout << "1. Uniform Cost Search" << endl;
+    cout << "2. A* Misplaced Tile" << endl;
+    cout << "3. A* Manhattan Distance" << endl;
+    
+    int search_choice = 1;
+    cin >> search_choice;
     
     //n->get_p()->print();
     
     //cout << n->get_g() << endl;
+    Node* m = 0;
+    if(search_choice == 1)
+    {
+        cout << "You've chosen Uniform Cost Search" << endl;
+        m = uniform_cost(n);
+    }
+    else if(search_choice == 2)
+    {
+        cout << "You've chosen A* Search with the Misplaced Tile Heuristic" << endl;
+        m = a_misplaced_tile(n);
+    }
+    else if(search_choice == 3)
+    {
+        cout << "You've chosen A* Search with the Manhattan Distance Heuristic" << endl;
+        m = a_manhattan_dist(n);
+    }
+    else
+    {
+        cout << "your choice is bad and the rest won't work" << endl;
+    }
     
-    Node* m = uniform_cost(n);
     if(m != 0)
     {
         vector<Node*> trace;
         traceback(m, trace);
         
-            cout << trace.size() << endl;
-            cout << "the solution is" << endl;
-            cout << endl;
-        for(int i = trace.size() - 1; i > -1; i--)
+        cout << trace.size() << endl;
+        cout << "the solution is" << endl;
+        cout << endl;
+        
+        if(search_choice == 1)
         {
-            trace.at(i)->get_p()->print();
-            cout << endl;
+            for(int i = trace.size() - 1; i > -1; i--)
+            {
+                trace.at(i)->get_p()->print();
+                cout << "current node cost: "<<trace.at(i)->get_g() << endl;
+                cout << endl;
+            }
+        }
+        else if(search_choice == 2)
+        {
+            for(int i = trace.size() - 1; i > -1; i--)
+            {
+                trace.at(i)->get_p()->print();
+                cout << "current # of misplaced_tiles: "<< trace.at(i)->get_p()->misplaced_tiles()<< endl;
+                cout << endl;
+            }
+        }
+        else if(search_choice == 3)
+        {
+            for(int i = trace.size() - 1; i > -1; i--)
+            {
+                trace.at(i)->get_p()->print();
+                cout << "current manhattan_distance: "<< trace.at(i)->get_p()->manhattan_distance()<< endl;
+                cout << endl;
+            }
         }
     }
     else
     {
-        cout << "didnt work homie" << endl;
+        cout << "sorry homie, didn't work" << endl;
     }
     
 }
