@@ -138,8 +138,6 @@ public:
             }
             cout << endl;
         }
-        
-        //cout << "total manhattan distance is " << manhattan_distance() << endl;
     }
     
     bool is_up()
@@ -148,11 +146,6 @@ public:
         {
             return false;
         }
-        
-        /*int temp = puzzle_board.at(blank.first - 1).at(blank.second);
-         puzzle_board.at(blank.first - 1).at(blank.second) = puzzle_board.at(blank.first).at(blank.second);
-         puzzle_board.at(blank.first).at(blank.second) = temp;
-         blank.first = blank.first - 1;*/
         return true;
     }
     
@@ -170,11 +163,6 @@ public:
         {
             return false;
         }
-        
-        /*int temp = puzzle_board.at(blank.first + 1).at(blank.second);
-         puzzle_board.at(blank.first + 1).at(blank.second) = puzzle_board.at(blank.first).at(blank.second);
-         puzzle_board.at(blank.first).at(blank.second) = temp;
-         blank.first = blank.first + 1;*/
         return true;
     }
     
@@ -192,11 +180,6 @@ public:
         {
             return false;
         }
-        
-        /*int temp = puzzle_board.at(blank.first).at(blank.second - 1);
-         puzzle_board.at(blank.first).at(blank.second - 1) = puzzle_board.at(blank.first).at(blank.second);
-         puzzle_board.at(blank.first).at(blank.second) = temp;
-         blank.second = blank.second - 1;*/
         return true;
     }
     
@@ -214,11 +197,6 @@ public:
         {
             return false;
         }
-        
-        /*int temp = puzzle_board.at(blank.first).at(blank.second + 1);
-         puzzle_board.at(blank.first).at(blank.second + 1) = puzzle_board.at(blank.first).at(blank.second);
-         puzzle_board.at(blank.first).at(blank.second) = temp;
-         blank.second = blank.second + 1;*/
         return true;
     }
     
@@ -260,11 +238,11 @@ public:
         return &puzzle_board;
     }
     
-    bool operator==(const Puzzle *p)
+    bool operator==(const Puzzle &p)
     {
-        if(puzzle_board == p->puzzle_board)
+        if(puzzle_board == p.puzzle_board)
         {
-            if(blank == p->blank)
+            if(blank == p.blank)
             {
                 return true;
             }
@@ -311,7 +289,6 @@ public:
                 {
                     pair<int,int> found_index = find(val_set);
                     int man_dist = abs(found_index.first - i) + abs(found_index.second - j);
-                    //cout << "man_dist for " << val_set << " is " << man_dist << endl;
                     total_dist += man_dist;
                 }
                 val_set++;

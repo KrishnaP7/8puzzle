@@ -33,13 +33,6 @@ public:
         g = n->g + 1;
     }
     
-    /*Node & operator=(Node& n)
-     {
-     puzzle_ref->print();
-     *(puzzle_ref) = *(n.get_p());
-     
-     }*/
-    
     Puzzle* get_p()
     {
         return puzzle_ref;
@@ -63,11 +56,7 @@ public:
         }
         
         Node* n = new Node(this);
-        
         n->puzzle_ref->up();
-        /*cout << endl;
-         n->get_p()->print();
-         cout << endl;*/
         
         return n;
     }
@@ -80,11 +69,7 @@ public:
         }
         
         Node* n = new Node(this);
-        
         n->puzzle_ref->down();
-        /*cout << endl;
-         n->get_p()->print();
-         cout << endl;*/
         
         return n;
     }
@@ -97,11 +82,7 @@ public:
         }
         
         Node* n = new Node(this);
-        
         n->puzzle_ref->left();
-        /*cout << endl;
-         n->get_p()->print();
-         cout << endl;*/
         
         return n;
     }
@@ -114,26 +95,26 @@ public:
         }
         
         Node* n = new Node(this);
-        
         n->puzzle_ref->right();
-        /*cout << endl;
-         n->get_p()->print();
-         cout << endl;*/
         
         return n;
     }
+    
     Node* get_parent()
     {
         return parent;
     }
+    
     void child(Node* n)
     {
         children.push_back(n);
     }
+    
     int manhattan_distance()
     {
         return puzzle_ref->manhattan_distance() + g;
     }
+    
     int misplaced_tiles()
     {
         return puzzle_ref->misplaced_tiles() + g;
