@@ -3,10 +3,10 @@
 #include <queue>
 
 using namespace std;
-vector<Puzzle*> visited;
-int max_queue = 0;
+vector<Puzzle*> visited;				//vector of all puzzle states visited (unsorted set would've been better
+int max_queue = 0;					//int of largest size in frontier queue
 
-bool unique(Node* n)
+bool unique(Node* n)							//checks if puzzle state has been seen before
 {
     for(int i = 0; i < visited.size(); i++)
     {
@@ -18,7 +18,7 @@ bool unique(Node* n)
     return true;
 }
 
-void add_kids(Node* n, vector<Node*> &v)
+void add_kids(Node* n, vector<Node*> &v)				//adds frontier nodes to queue if its unique
 {
     Node* temp;
     bool check = true;
@@ -76,7 +76,7 @@ void add_kids(Node* n, vector<Node*> &v)
     }
 }
 
-Node* retrieve_smallest_tile(vector<Node*> &v)
+Node* retrieve_smallest_tile(vector<Node*> &v)					//returns misplaced vector heuristic node
 {
     Node* smallest = v.at(0);
     int pop_ind = 0;
@@ -93,7 +93,7 @@ Node* retrieve_smallest_tile(vector<Node*> &v)
     return smallest;
 }
 
-Node* retrieve_smallest_dist(vector<Node*> &v)
+Node* retrieve_smallest_dist(vector<Node*> &v)					//returns manhattan distance heuristic node
 {
     Node* smallest = v.at(0);
     int pop_ind = 0;
@@ -110,7 +110,7 @@ Node* retrieve_smallest_dist(vector<Node*> &v)
     return smallest;
 }
 
-Node* retrieve_smallest_cost(vector<Node*> &v)
+Node* retrieve_smallest_cost(vector<Node*> &v)					//returns uniform cost heuristic node
 {
     Node* smallest = v.at(0);
     int pop_ind = 0;
@@ -127,31 +127,32 @@ Node* retrieve_smallest_cost(vector<Node*> &v)
     return smallest;
 }
 
-Node* search(Node* root, int choice)
+Node* search(Node* root, int choice)					//the general bfs typesearch function which uses the heuristics
 {
     if(root->get_p()->goal_check())
     {
         return root;
     }
-    visited.push_back(root->get_p());
+    visited.push_back(root->get_p());					//initializes root
     vector<Node*> kyu;
     add_kids(root, kyu);
     max_queue = kyu.size();
     //cout << "root has " << kyu.size() << " children" << endl;
     cout << "Expanding state" << endl;
+    cout << endl;
     root->get_p()->print();
     cout << endl;
     bool goal = false;
-    Node* goal_node = 0;
+    Node* goal_node = 0;		
     
-    while(kyu.size() > 0 && !goal)
+    while(kyu.size() > 0 && !goal)					//the actual while loop for the rest of the search
     {
 	if(max_queue < kyu.size())
 	{
 		max_queue = kyu.size();
 	}
         Node* curr = 0;
-        if(choice == 1)
+        if(choice == 1)							//returns best node based on heuristic
         {
             curr = retrieve_smallest_cost(kyu);
         }
@@ -165,7 +166,7 @@ Node* search(Node* root, int choice)
         }
         visited.push_back(curr->get_p());
         
-        if(curr->get_p()->goal_check())
+        if(curr->get_p()->goal_check())					//checks if goal node
         {
             goal_node = curr;
         }
@@ -180,10 +181,11 @@ Node* search(Node* root, int choice)
 	{
 		cout << " and h(n) = " << curr->get_p()->manhattan_distance() << endl;
 	}
+	cout << endl;
         curr->get_p()->print();
         cout << endl;
         
-        add_kids(curr, kyu);
+        add_kids(curr, kyu);						//add kids to frontier
         goal = curr->get_p()->goal_check();
         
         if(goal)
@@ -194,7 +196,7 @@ Node* search(Node* root, int choice)
     return goal_node;
 }
 
-void traceback(Node* n, vector<Node*> &v)
+void traceback(Node* n, vector<Node*> &v)				//recursive trace function from goal to root
 {
     if(n->get_parent() == 0)
     {
@@ -207,21 +209,37 @@ void traceback(Node* n, vector<Node*> &v)
 }
 
 int main()
-{
-    Puzzle p(2);
+{   
+    cout << "Welcome to Krishna Pakalapati's 8-puzzler solver" << endl;
+    cout << "Type \"1\" to use a default puzzle, or \"2\" to enter your own puzzle" << endl;
+    Puzzle *p = 0;
     
-    Node* n = new Node(&p);
+    int ptype = 0;
+    cin >> ptype;
+    cout << endl;
+
+    if(ptype == 1)							//sets the puzzle based on input
+    {
+	p = new Puzzle(0);
+    }
+    else if(ptype == 2)
+    {
+	p = new Puzzle(2);
+    }
+    
+    Node* n = new Node(p);						
     n->get_p()->print();
     cout << endl;
-    cout << "1. Uniform Cost Search" << endl;
+    cout << "1. Uniform Cost Search" << endl;				//chooses which heuristic to use
     cout << "2. A* Misplaced Tile" << endl;
     cout << "3. A* Manhattan Distance" << endl;
     
     int search_choice = 1;
     cin >> search_choice;
+    cout << endl;
     
     Node* m = 0;
-    m = search(n, search_choice);
+    m = search(n, search_choice);					//returns a reference to the goal node found by search
     
     if(m != 0)
     {
@@ -234,7 +252,7 @@ int main()
         
         cout << endl;
         
-        /*if(search_choice == 1)
+        /*if(search_choice == 1)						//my own output for testing
         {
             for(int i = trace.size() - 1; i > -1; i--)
             {
@@ -261,6 +279,14 @@ int main()
                 cout << endl;
             }
         }*/
+	
+	cout << "Printing trace:" << endl;					//prints the trace
+	cout << endl;
+	for(int i = trace.size() - 1; i > -1; i--)
+	{
+		trace.at(i)->get_p()->print();
+		cout << endl;
+	}
 	
     }
     else

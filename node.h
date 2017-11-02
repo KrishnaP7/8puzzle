@@ -6,26 +6,26 @@
 class Node
 {
 private:
-    Puzzle *puzzle_ref;
-    vector<Node*> children;
-    Node *parent;
-    int g;
+    Puzzle *puzzle_ref;						//reference to puzzle object
+    vector<Node*> children;					//vector of children (pretty much unused and useless)
+    Node *parent;						//reference to parent node
+    int g;							//g(n) value and depth (same thing when cost of each move is uniform)
     
 public:
     
     Node()
     {
-        puzzle_ref = new Puzzle(0);
+        puzzle_ref = new Puzzle(0);				//default constructor
     }
     
-    Node(Puzzle *p)
+    Node(Puzzle *p)						//makes root node when given a puzzle reference
     {
         parent = 0;
         puzzle_ref = p;
         g = 0;
     }
     
-    Node(Node* n)
+    Node(Node* n)						//makes a potential child copy of current node 
     {
         parent = n;
         puzzle_ref = new Puzzle(0);
@@ -33,22 +33,22 @@ public:
         g = n->g + 1;
     }
     
-    Puzzle* get_p()
+    Puzzle* get_p()						//returns puzzle reference
     {
         return puzzle_ref;
     }
     
-    int get_g()
+    int get_g()							//return g(n)
     {
         return g;
     }
     
-    void set_g(int n)
+    void set_g(int n)						//sets g
     {
         this->g = n;
     }
-    
-    Node* up()
+   
+    Node* up()							//returns node reference of using up on current node ^1
     {
         if(!puzzle_ref->is_up())
         {
@@ -61,7 +61,7 @@ public:
         return n;
     }
     
-    Node* down()
+    Node* down()						//^1
     {
         if(!puzzle_ref->is_down())
         {
@@ -74,7 +74,7 @@ public:
         return n;
     }
     
-    Node* left()
+    Node* left()						//^1
     {
         if(!puzzle_ref->is_left())
         {
@@ -87,7 +87,7 @@ public:
         return n;
     }
     
-    Node* right()
+    Node* right()						//^1
     {
         if(!puzzle_ref->is_right())
         {
@@ -100,22 +100,22 @@ public:
         return n;
     }
     
-    Node* get_parent()
+    Node* get_parent()						//returns parent pointer
     {
         return parent;
     }
     
-    void child(Node* n)
+    void child(Node* n)						//adds to child vector
     {
         children.push_back(n);
     }
     
-    int manhattan_distance()
+    int manhattan_distance()					//returns manhattan distance + g(n)
     {
         return puzzle_ref->manhattan_distance() + g;
     }
     
-    int misplaced_tiles()
+    int misplaced_tiles()					//returns misplaced tiles + g(n)
     {
         return puzzle_ref->misplaced_tiles() + g;
     }

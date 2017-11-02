@@ -17,9 +17,9 @@ using namespace std;
 class Puzzle
 {
 private:
-    int psize;
-    vector< vector<int> > puzzle_board;
-    pair<int, int> blank;
+    int psize; 						//change to change puzzle size
+    vector< vector<int> > puzzle_board;			//holds the matrix of the actual puzzle
+    pair<int, int> blank;				//location of the blank
     
     
 public:
@@ -33,7 +33,7 @@ public:
         }                                               //defualt puzzle construction
         else if(o == 3)
         {
-            return;
+            return;					//testing
         }
         
         int val_set = 1;
@@ -44,7 +44,7 @@ public:
             {
                 if((i == psize - 1) && (j == psize - 2))
                 {
-                    temp_vecs.at(j) = 0;
+                    temp_vecs.at(j) = 0;		//default puzzle board
                 }
                 else
                 {
@@ -60,18 +60,18 @@ public:
     
     Puzzle & operator=(const Puzzle &p)
     {
-        puzzle_board = p.puzzle_board;
+        puzzle_board = p.puzzle_board;			//equals operator overload
         blank = p.blank;
         return *this;
     }
     
-    void print_blank()
+    void print_blank()					//prints blank's location (testing)
     {
         cout << "blank: (" << 1 + blank.first << ", " << 1 + blank.second << ")" << endl;
     }
     
-    void set()
-    {
+    void set()						//sets user puzzle, doesn't error check at all.
+    {							//takes each row with three for loops (change to change puzzle size)
         cout << "Enter your puzzle, use a zero to represent the blank" << endl;
         cout << "Enter the first row, use space or tabs between numbers" << endl;
         
@@ -123,7 +123,7 @@ public:
         
     }
     
-    void print()
+    void print()					//prints the puzzle
     {
         if(puzzle_board.empty())
         {
@@ -134,13 +134,22 @@ public:
         {
             for(int j = 0; j < psize; j++)
             {
-                cout << puzzle_board.at(i).at(j);
+		int c = puzzle_board.at(i).at(j);
+		if(c == 0)
+		{
+		   cout << "b";
+		}
+		else
+		{
+                   cout << c;
+		}
+		cout << " ";
             }
             cout << endl;
         }
     }
     
-    bool is_up()
+    bool is_up()						//checks if up is a possible direction) ^1
     {
         if(blank.first == 0)
         {
@@ -149,7 +158,7 @@ public:
         return true;
     }
     
-    void up()
+    void up()						//moves blank up on puzzle board ^2
     {
         int temp = puzzle_board.at(blank.first - 1).at(blank.second);
         puzzle_board.at(blank.first - 1).at(blank.second) = puzzle_board.at(blank.first).at(blank.second);
@@ -157,7 +166,7 @@ public:
         blank.first = blank.first - 1;
     }
     
-    bool is_down()
+    bool is_down()					//^1
     {
         if(blank.first == psize - 1)
         {
@@ -166,7 +175,7 @@ public:
         return true;
     }
     
-    void down()
+    void down()						//^2
     {
         int temp = puzzle_board.at(blank.first + 1).at(blank.second);
         puzzle_board.at(blank.first + 1).at(blank.second) = puzzle_board.at(blank.first).at(blank.second);
@@ -174,7 +183,7 @@ public:
         blank.first = blank.first + 1;
     }
     
-    bool is_left()
+    bool is_left()					//^1
     {
         if(blank.second == 0)
         {
@@ -183,7 +192,7 @@ public:
         return true;
     }
     
-    void left()
+    void left()						//^2
     {
         int temp = puzzle_board.at(blank.first).at(blank.second - 1);
         puzzle_board.at(blank.first).at(blank.second - 1) = puzzle_board.at(blank.first).at(blank.second);
@@ -191,7 +200,7 @@ public:
         blank.second = blank.second - 1;
     }
     
-    bool is_right()
+    bool is_right()					//^1
     {
         if(blank.second == psize - 1)
         {
@@ -200,7 +209,7 @@ public:
         return true;
     }
     
-    void right()
+    void right()					//^2
     {
         int temp = puzzle_board.at(blank.first).at(blank.second + 1);
         puzzle_board.at(blank.first).at(blank.second + 1) = puzzle_board.at(blank.first).at(blank.second);
@@ -208,7 +217,7 @@ public:
         blank.second = blank.second + 1;
     }
     
-    bool goal_check()
+    bool goal_check()					//checks if current puzzleboard is the goal
     {
         if(puzzle_board.at(psize - 1).at(psize - 1) != 0)
         {
@@ -233,12 +242,12 @@ public:
         return true;
     }
     
-    vector< vector<int> > * get_v()
+    vector< vector<int> > * get_v()			//returns pointer to puzzleboard vector
     {
         return &puzzle_board;
     }
     
-    bool operator==(const Puzzle &p)
+    bool operator==(const Puzzle &p)			//equivalence operator overload
     {
         if(puzzle_board == p.puzzle_board)
         {
@@ -251,7 +260,7 @@ public:
         return false;
     }
     
-    int misplaced_tiles()
+    int misplaced_tiles()				//# of misplaced tiles
     {
         int tiles = 0;
         int val_set = 1;
@@ -273,7 +282,7 @@ public:
         return tiles;
     }
     
-    int manhattan_distance()
+    int manhattan_distance()				//distance of each misplaced tile from its goal state
     {
         int total_dist = 0;
         int val_set = 1;
@@ -297,7 +306,7 @@ public:
         return total_dist;
     }
     
-    pair<int, int> find(int val)
+    pair<int, int> find(int val)			//returns location of searched value on the puzzleboard
     {
         pair<int,int> index;
         index.first = -1;
